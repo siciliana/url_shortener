@@ -17,14 +17,24 @@ post '/urls' do
 
   @shortlink = generate_shortlink
   # create instance of a link record 
-  link_record = Link.new
-  
+  @link_record = Link.new
+  @link_record.original_link = @user_input
+  @link_record.shortened_link = @shortlink
+  @link_record.counter = 0
+  p @link_record.save 
   erb :urls
 end
 
 # e.g., /q6bda
-get '/:short_url' do
-  # query the database to find original_link based on @shortlink
+get '/:shortened_link' do
+  find_link = Link.find_by_shortened_link(params[:shortened_link]) 
+  find_link.counter += 1
+  find_link.save
+  redirect find_link.original_link
+
+
+
+  #query the database to find original_link based on @shortlink
   # increment counter 
   # redirect to original_link
 end
