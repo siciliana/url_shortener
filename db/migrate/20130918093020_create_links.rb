@@ -4,6 +4,7 @@ class CreateLinks < ActiveRecord::Migration
       t.integer :counter
       t.string :original_link
       t.string :shortened_link
+      t.integer :user_id
       t.timestamps
     end 
   end

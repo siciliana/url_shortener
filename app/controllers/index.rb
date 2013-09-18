@@ -1,7 +1,26 @@
+#contains the routes related to creating, displaying, and editing users
+
 get '/' do
-  # let user create new short URL, display a list of shortened URLs
-  erb :index 
+  # Look in app/views/index.erb
+  erb :index
 end
+
+get '/secret_page' do                   # change 
+  if session[:user_id]
+    erb :secret_page  
+  else 
+    redirect '/'
+  end 
+end 
+
+get '/logout' do                       # add
+  session.clear
+  redirect '/'
+end 
+
+get '/login' do
+  erb :login
+end 
 
 def generate_shortlink(length=6)
   chars = 'abcdefghijklmnopqrstuvwxyzabABCDEFGHIJKLMNOPQRSTUVWXYZ123456789'
@@ -9,6 +28,22 @@ def generate_shortlink(length=6)
   length.times { |char| shortlink << chars[rand(chars.length)] }
   p shortlink
 end 
+
+get '/:shortened_link' do
+  find_link = Link.find_by_shortened_link(params[:shortened_link]) 
+  find_link.counter += 1
+  find_link.save
+  redirect find_link.original_link
+end
+
+
+#### URLS.RB ====================================================
+
+
+#contains the routes related to listing, creating, and redirecting Url objects
+
+
+
 
 post '/urls' do
   puts params
@@ -25,19 +60,20 @@ post '/urls' do
   erb :urls
 end
 
-# e.g., /q6bda
-get '/:shortened_link' do
-  find_link = Link.find_by_shortened_link(params[:shortened_link]) 
-  find_link.counter += 1
-  find_link.save
-  redirect find_link.original_link
+post '/login' do
+  @user = User.find_by_email(params[:email])
+  if @user.id == User.authenticate(params[:email],params[:password])
+    session[:user_id] = @user.id
+    redirect '/secret_page'
+  else 
+    # @errors = "You aren't real."
+    redirect "/"
+  end 
+end 
 
 
 
-  #query the database to find original_link based on @shortlink
-  # increment counter 
-  # redirect to original_link
-end
+
 
 
 
