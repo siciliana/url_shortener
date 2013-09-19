@@ -40,6 +40,17 @@ get '/:shortened_link' do
   redirect find_link.original_link
 end
 
+get '/profile/:user_id' do
+  if session[:user_id]
+  ## check for session blah blah blah
+  ## instantiate user and array of links of user
+    @u = User.find(session[:user_id])
+    @links = @u.links
+    erb :profile
+  else
+    redirect "/"
+  end
+end
 
 #### URLS.RB ====================================================
 

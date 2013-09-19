@@ -1,0 +1,7 @@
+<h1><%= @u.fullname.capitalize %>'s Profile</h1>
+<img src =" http://upload.wikimedia.org/wikipedia/commons/c/c5/William_Frawley_1951.JPG"></img>
+<hr>
+
+<% @links.each do |link| %>
+<li><%= p link.original_link %> was clicked <%= link.counter %> times</li>
+<% end %>
